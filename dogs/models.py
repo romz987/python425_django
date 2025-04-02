@@ -1,6 +1,9 @@
 from django.db import models
 
 # Create your models here.
+NULLABLE = {'blank': True, 'null': True}
+
+# Create your models here.
 class Breed(models.Model):
     name = models.CharField(max_length=100, verbose_name='breed')
     description = models.CharField(max_length=1000, verbose_name='description')
@@ -11,7 +14,6 @@ class Breed(models.Model):
     class Meta:
         verbose_name = 'breed'
         verbose_name_plural = 'breeds'
-
 
 # My metamodel 
 class Dog(models.Model):
@@ -27,10 +29,10 @@ class Dog(models.Model):
         verbose_name = 'dog'
         verbose_name_plural = 'dogs'
 
-        abstract = True 
-        app_lable = 'dogs'
-        ordering = [-1]
-        proxy = True 
-        permissions = []
-        db_table = 'doggies'
-        get_latest_by = 'birth_date'
+        # abstract = True 
+        # app_lable = 'dogs'
+        # ordering = [-1]
+        # proxy = True 
+        # permissions = []
+        # db_table = 'doggies'
+        # get_latest_by = 'birth_date'
