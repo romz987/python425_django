@@ -1,0 +1,22 @@
+{% extends 'dogs/base.html' %}
+
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="row">
+  <div class="col-6">
+    <div class="card">
+      <div class="card-header">
+        <p>Редактирование данных собаки</p>
+      </div>
+      <div class="card-body">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-outline-succes">
+          Сохранить
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% endblock %}
