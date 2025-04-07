@@ -81,7 +81,7 @@ def dog_detail_view(request, pk):
     dog_object = Dog.objects.get(pk=pk)
     context = {
         'object': dog_object,
-        'title': dog_object
+        'title': dog_object.name + ' - ' + dog_object.breed.name
     }
     return render(request, 'dogs/detail.html', context=context)
 
@@ -107,7 +107,7 @@ def dog_delete_view(request, pk):
     """ Удалить собаку """
     dog_object = get_object_or_404(Dog, pk=pk)
     if request.method == 'POST':
-        dog_object.delete
+        dog_object.delete()
         return HttpResponseRedirect(reverse('dogs:dogs_list'))
     context = {
         'object': dog_object,
