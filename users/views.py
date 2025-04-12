@@ -8,6 +8,12 @@ from users.forms import UserRegisterForm
 
 # Create your views here.
 def user_register_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('dogs:index'))
+
+    # Создадим форму
+    form = UserRegisterForm()
+
     if request.method == "POST":
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -17,8 +23,9 @@ def user_register_view(request):
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
             return HttpResponseRedirect(reverse('dogs:index'))
+
     context = {
         'title': 'Создать аккаунт',
-        'form': UserRegisterForm
+        'form': form
     }
     return render(request, 'users/user_register.html', context=context)
