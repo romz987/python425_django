@@ -1,6 +1,6 @@
 # POSTGRES  
 
-## DEPLOY IN DOKCER  
+## DEPLOY IN DOCKER  
 
 1. Скачать последнюю версию postgres:      
 
@@ -23,7 +23,7 @@
             -v /root/educational_db:/var/lib/postgresql/data postgres  
 
 
-!!! Мы разворачиваем этот контейнер как ВТОРОЙ контейнер с postgresel,     
+!!! Мы разворачиваем этот контейнер как ВТОРОЙ контейнер с postgresql,     
     Поэтому меняем стандартный порт 5432 на порт 5434.  
     Для того, чтобы по этому порту работало удаленное подключение,  
     в директории educational_db/ найти файл postgresql.conf,  
@@ -45,6 +45,6 @@
         CREATE DATABASE educational_1;
 
 
-8. Под  ключится к DB educational_1 с помощью PSQL:  
+8. Подключится к DB educational_1 с помощью PSQL:  
 
         psql -h 194.190.152.45 -p 5434 -U postgres -d educational_1
