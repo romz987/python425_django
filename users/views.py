@@ -38,6 +38,7 @@ def user_register_view(request):
     return render(request, 'users/user_register.html', context=context)
 
 
+# Loginka view
 def user_login_view(request):
 
     if request.method == "POST":
@@ -57,3 +58,22 @@ def user_login_view(request):
     }
 
     return render(request, 'users/user_login.html', context=context) 
+
+
+# User page view
+def user_profile_view(request):
+
+    # получаем данные пользователя 
+    user_object = request.user
+
+    # проверяем полученные данные на содержимое 
+    if user_object.first_name and user_object.last_name:
+        user_name = user_object.first_name + ' ' + user_object.last_name
+    else:
+        user_name = user_object
+
+    context = {
+        'title': f'Ваш профиль {user_name}'
+    }
+    
+    return render(request, 'users/user_profile_read_only.html', context=context)
