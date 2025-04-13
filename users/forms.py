@@ -19,3 +19,10 @@ class UserRegisterForm(forms.ModelForm):
         if cleaned_data['password'] != cleaned_data['password2']:
             raise forms.ValidationError('Пароли не совпадают!!!')
         return cleaned_data['password2']
+
+
+class UserLoginForm(forms.Form):
+
+    email = forms.EmailField()
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
+

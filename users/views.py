@@ -2,8 +2,14 @@ from django.shortcuts import (
     render, 
     reverse 
 )
-from django.http import HttpResponseRedirect 
-from users.forms import UserRegisterForm
+
+from django.http import (
+    HttpResponseRedirect, 
+    HttpResponse
+)
+
+from users.forms import UserRegisterForm, UserLoginForm
+from django.contrib.auth import authenticate, login, logout
 
 
 # Create your views here.
@@ -22,10 +28,32 @@ def user_register_view(request):
             print(form.cleaned_data['password'])
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
-            return HttpResponseRedirect(reverse('dogs:index'))
+            return HttpResponseRedirect(reverse('users:user_login'))
 
     context = {
         'title': 'Создать аккаунт',
         'form': form
     }
+
     return render(request, 'users/user_register.html', context=context)
+
+
+def user_login_view(request):
+
+    if request.method == "POST":
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+            user = authenticate(email=cleaned_data['email'], password=cleaned_data['password'])
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponseRedirect(reverse('dogs:index'))
+            return HttpResponse("Вы либо не зарегистрированы, либо ввели неверный пароль")
+
+    context  = {
+        'title': 'Вход в аккаунт',
+        'form': UserLoginForm
+    }
+
+    return render(request, 'users/user_login.html', context=context) 
