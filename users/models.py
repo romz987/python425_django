@@ -9,9 +9,9 @@ class User(AbstractUser):
 
     username = None 
     email = models.EmailField(unique=True, verbose_name='email')
-    phone = models.CharField(max_length=35, unique=True, verbose_name='phone_number', **NULLABLE)
-    telegram = models.CharField(max_length=150, unique=True, verbose_name='telegram_username', **NULLABLE)
-    is_active = models.BooleanField(default=True, verbose_name='active')
+    phone = models.CharField(max_length=35, unique=True, verbose_name='Номер телефона', **NULLABLE)
+    telegram = models.CharField(max_length=150, unique=True, verbose_name='Телеграм', **NULLABLE)
+    is_active = models.BooleanField(default=True, verbose_name='Активность')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
