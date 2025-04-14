@@ -19,6 +19,8 @@ from django.contrib.auth import (
     login, 
     logout
 )
+# Только авторизованные пользователи
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -70,6 +72,7 @@ def user_login_view(request):
 
 
 # User page view
+@login_required
 def user_profile_view(request):
 
     # получаем данные пользователя 
@@ -89,6 +92,7 @@ def user_profile_view(request):
 
 
 # User logout view 
+@login_required
 def user_logout_view(request):
     logout(request)
     return redirect('dogs:index')

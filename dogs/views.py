@@ -6,6 +6,9 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse 
 from dogs.forms import DogForm 
 
+# Только авторизованные пользователи 
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 def index_view(request):
     context = {        
@@ -57,6 +60,7 @@ def dog_list_view(request):
 #     return render(request, 'dogs/create.html', context=context)
 
 
+@login_required
 def dog_create_view(request):
     """ Создать собаку """
     if request.method == 'POST':
@@ -76,6 +80,7 @@ def dog_create_view(request):
     return render(request, 'dogs/create_update.html', context=context)
 
 
+@login_required
 def dog_detail_view(request, pk):
     """ Вернуть детальную информацию о собаке """
     dog_object = Dog.objects.get(pk=pk)
@@ -86,6 +91,7 @@ def dog_detail_view(request, pk):
     return render(request, 'dogs/detail.html', context=context)
 
 
+@login_required
 def dog_update_view(request, pk):
     """ Изменить информацию о собаке """
     dog_object = get_object_or_404(Dog, pk=pk)
@@ -103,6 +109,7 @@ def dog_update_view(request, pk):
     return render(request, 'dogs/create_update.html', context=context)
 
 
+@login_required
 def dog_delete_view(request, pk):
     """ Удалить собаку """
     dog_object = get_object_or_404(Dog, pk=pk)
