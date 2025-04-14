@@ -1,6 +1,7 @@
 from django.shortcuts import (
     render, 
-    reverse 
+    reverse,
+    redirect
 )
 
 from django.http import (
@@ -8,8 +9,16 @@ from django.http import (
     HttpResponse
 )
 
-from users.forms import UserRegisterForm, UserLoginForm
-from django.contrib.auth import authenticate, login, logout
+from users.forms import (
+    UserRegisterForm, 
+    UserLoginForm
+)
+
+from django.contrib.auth import (
+    authenticate, 
+    login, 
+    logout
+)
 
 
 # Create your views here.
@@ -77,3 +86,9 @@ def user_profile_view(request):
     }
     
     return render(request, 'users/user_profile_read_only.html', context=context)
+
+
+# User logout view 
+def user_logout_view(request):
+    logout(request)
+    return redirect('dogs:index')
