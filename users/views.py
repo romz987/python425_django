@@ -11,7 +11,8 @@ from django.http import (
 
 from users.forms import (
     UserRegisterForm, 
-    UserLoginForm
+    UserLoginForm,
+    UserUpdateForm
 )
 
 from django.contrib.auth import (
@@ -56,12 +57,16 @@ def user_login_view(request):
         form = UserLoginForm(request.POST)
         if form.is_valid():
             cleaned_data = form.cleaned_data
-            user = authenticate(email=cleaned_data['email'], password=cleaned_data['password'])
+            user = authenticate(
+                email=cleaned_data['email'], password=cleaned_data['password']
+            )
             if user is not None:
                 if user.is_active:
                     login(request, user)
                     return HttpResponseRedirect(reverse('dogs:index'))
-            return HttpResponse("Вы либо не зарегистрированы, либо ввели неверный пароль")
+            return HttpResponse(
+                "Вы либо не зарегистрированы, либо ввели неверный пароль"
+            )
 
     context  = {
         'title': 'Вход в аккаунт',
@@ -88,7 +93,35 @@ def user_profile_view(request):
         'title': f'Ваш профиль {user_name}'
     }
     
-    return render(request, 'users/user_profile_read_only.html', context=context)
+    return render(
+        request, 
+        'users/user_profile_read_only.html', 
+        context=context
+    )
+
+
+@login_required 
+def user_update_view(request):
+    user_object = request.user
+    if request.method == 'POST':
+        form = UserUpdateForm(
+            request.POST, 
+            request.FILES, 
+            instance=user_object
+        )
+        if form.is_valid():
+            user_object = form.save()
+            user_object.save()
+            return HttpResponseRedirect(reverse('users:user_profile'))
+    context = {
+        'object': user_object,
+        'title': (
+            f'Изменить профиль {user_object.email} '
+            #f'{user_object.last_name}'
+        ),
+        'form': UserUpdateForm(instance=user_object)
+    }
+    return render(request, 'users/user_update.html', context)
 
 
 # User logout view 

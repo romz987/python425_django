@@ -12,16 +12,34 @@ class StyleFormMixin:
             field.widget.attrs['class'] = 'form-control'
 
 
+class UserUpdateForm(StyleFormMixin, forms.ModelForm):
+
+    class Meta: 
+        model = User 
+        fields = (
+            'email', 
+            'first_name', 
+            'last_name', 
+            'phone', 
+            'telegram', 
+            'avatar'
+        )
+
+
 class UserRegisterForm(StyleFormMixin, forms.ModelForm):
 
-    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Повторите пароль', widget=forms.PasswordInput)
-
+    password = forms.CharField(
+        label='Пароль', 
+        widget=forms.PasswordInput
+    )
+    password2 = forms.CharField(
+        label='Повторите пароль', 
+        widget=forms.PasswordInput
+    )
     
     class Meta: 
         model = User 
         fields = ('email', )
-
 
     def clean_password2(self):
         cleaned_data = self.cleaned_data 
@@ -33,5 +51,10 @@ class UserRegisterForm(StyleFormMixin, forms.ModelForm):
 class UserLoginForm(StyleFormMixin, forms.Form):
 
     email = forms.EmailField()
-    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
+    password = forms.CharField(
+        label='Пароль', 
+        widget=forms.PasswordInput
+    )
+
+
 
