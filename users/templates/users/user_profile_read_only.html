@@ -19,6 +19,7 @@
         <span class="card-text">Телеграм: {{ user.telegram|default:"не указано" }}</span><br>
 
         <a class="btn btn-outline-info mt-3" href="{% url 'users:user_update' %}">обновить</a>
+        <a class="btn btn-outline-info mt-3" href="{% url 'users:user_change_password' %}">изменить пароль</a>
       </div>
     </div>
   </div>

@@ -2,6 +2,8 @@ from django import forms
 
 from users.models import User 
 from users.validators import validate_password
+from django.contrib.auth.forms import PasswordChangeForm 
+
 
 
 class StyleFormMixin:
@@ -59,4 +61,5 @@ class UserLoginForm(StyleFormMixin, forms.Form):
     )
 
 
-
+class UserChangePasswordForm(StyleFormMixin, PasswordChangeForm):
+    pass

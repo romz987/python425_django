@@ -12,17 +12,19 @@ from django.http import (
 from users.forms import (
     UserRegisterForm, 
     UserLoginForm,
-    UserUpdateForm
+    UserUpdateForm,
+    UserChangePasswordForm
 )
 
 from django.contrib.auth import (
     authenticate, 
     login, 
-    logout
+    logout,
+    update_session_auth_hash
 )
 # Только авторизованные пользователи
 from django.contrib.auth.decorators import login_required
-
+from django.contrib import messages
 
 # Create your views here.
 def user_register_view(request):
@@ -121,7 +123,30 @@ def user_update_view(request):
         ),
         'form': UserUpdateForm(instance=user_object)
     }
-    return render(request, 'users/user_update.html', context)
+    return render(request, 'users/user_update.html', context=context)
+
+
+# Смена пароля пользователя
+@login_required 
+def user_change_password_view(request):
+    user_object = request.user 
+    form = UserChangePasswordForm(user_object, request.POST)
+    if request.method == 'POST':
+        if form.is_valid():
+            user_object = form.save()
+            update_session_auth_hash(request, user_object)
+            messages.success(request, 'Пароль был успешно изменен')
+            return HttpResponseRedirect(reverse('users:user_profile'))
+        else:
+            messages.error(request, 'Не удалось изменить пароль')
+    context = {
+        'title': (
+            f'Изменить пароль {user_object.first_name} '
+            f'{user_object.last_name}'
+        ),
+        'form': form 
+    }
+    return render(request, 'users/user_change_password.html', context=context)
 
 
 # User logout view 
