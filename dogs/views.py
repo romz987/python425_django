@@ -60,7 +60,7 @@ def dog_list_view(request):
 #     return render(request, 'dogs/create.html', context=context)
 
 
-@login_required
+@login_required(login_url='users:user_login')
 def dog_create_view(request):
     """ Создать собаку """
     if request.method == 'POST':
@@ -80,7 +80,7 @@ def dog_create_view(request):
     return render(request, 'dogs/create_update.html', context=context)
 
 
-@login_required
+@login_required(login_url='users:user_login')
 def dog_detail_view(request, pk):
     """ Вернуть детальную информацию о собаке """
     dog_object = Dog.objects.get(pk=pk)
@@ -91,7 +91,7 @@ def dog_detail_view(request, pk):
     return render(request, 'dogs/detail.html', context=context)
 
 
-@login_required
+@login_required(login_url='users:user_login')
 def dog_update_view(request, pk):
     """ Изменить информацию о собаке """
     dog_object = get_object_or_404(Dog, pk=pk)
@@ -109,7 +109,7 @@ def dog_update_view(request, pk):
     return render(request, 'dogs/create_update.html', context=context)
 
 
-@login_required
+@login_required(login_url='users:user_login')
 def dog_delete_view(request, pk):
     """ Удалить собаку """
     dog_object = get_object_or_404(Dog, pk=pk)
