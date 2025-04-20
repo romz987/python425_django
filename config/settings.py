@@ -138,3 +138,16 @@ MEDIA_ROOT = (
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
+
+# Подключение к email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'romz987'
+EMAIL_HOST_PASSWORD = 'gogulkfopyjglzpv'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+EMAIL_SERVER = EMAIL_HOST_USER 
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER 
+EMAIL_ADMIN = EMAIL_HOST_USER
