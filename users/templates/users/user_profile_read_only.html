@@ -18,7 +18,7 @@
         <span class="card-text">Телефон: {{ user.phone|default:"не указано" }}</span><br>
         <span class="card-text">Телеграм: {{ user.telegram|default:"не указано" }}</span><br>
 
-        <a class="btn btn-outline-info mt-3" href="{% url 'users:user_update' %}">обновить</a>
+        <a class="btn btn-outline-info mt-3" href="{% url 'users:user_update' %}">изменить профиль</a>
         <a class="btn btn-outline-info mt-3" href="{% url 'users:user_change_password' %}">изменить пароль</a>
         <a class="btn btn-outline-danger mt-3" href="{% url 'users:user_generate_new_password' %}">сгенерировать пароль</a>
 

@@ -13,7 +13,7 @@ class BreedAdmin(admin.ModelAdmin):
 @admin.register(Dog)
 class DogAdmin(admin.ModelAdmin):
     # поля, которые будут отображатсья в админке
-    list_display = ('pk', 'name', 'breed')
+    list_display = ('pk', 'name', 'breed', 'owner')
     # поля, по которым можно будет сортировать объекты модели в админке
     list_filter = ('breed', )
     # как будут сортироваться объекты модели в административной панели

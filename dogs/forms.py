@@ -9,7 +9,8 @@ class DogForm(StyleFormMixin, forms.ModelForm):
     
     class Meta:
         model = Dog 
-        fields = '__all__'
+        exclude = ('owner', )
+        # fields = '__all__'
         # Используем виджет date
         widgets = {
             'birth_date': DateInput(attrs={'type': 'date'})          

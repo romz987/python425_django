@@ -66,7 +66,10 @@ def dog_create_view(request):
     if request.method == 'POST':
         form = DogForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            dog_object = form.save()
+            dog_object.owner = request.user 
+            dog_object.save()
+            #form.save()
             return HttpResponseRedirect(reverse('dogs:dogs_list'))
         else:
             print(form.errors)  # Добавьте эту строку для отладки
