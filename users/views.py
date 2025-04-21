@@ -1,3 +1,5 @@
+import random
+import string
 from django.shortcuts import (
     render, 
     reverse,
@@ -16,12 +18,18 @@ from users.forms import (
     UserChangePasswordForm
 )
 
+from users.services import (
+    send_register_email, 
+    send_new_password
+)
+
 from django.contrib.auth import (
     authenticate, 
     login, 
     logout,
     update_session_auth_hash
 )
+
 # Только авторизованные пользователи
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -42,6 +50,7 @@ def user_register_view(request):
             print(form.cleaned_data['password'])
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
+            send_register_email(new_user.email)
             return HttpResponseRedirect(reverse('users:user_login'))
 
     context = {
@@ -79,7 +88,7 @@ def user_login_view(request):
 
 
 # User page view
-@login_required
+@login_required(login_url='users:user_login')
 def user_profile_view(request):
 
     # получаем данные пользователя 
@@ -102,7 +111,7 @@ def user_profile_view(request):
     )
 
 
-@login_required 
+@login_required(login_url='users:user_login')
 def user_update_view(request):
     user_object = request.user
     if request.method == 'POST':
@@ -127,7 +136,7 @@ def user_update_view(request):
 
 
 # Смена пароля пользователя
-@login_required 
+@login_required(login_url='users:user_login')
 def user_change_password_view(request):
     user_object = request.user 
     form = UserChangePasswordForm(user_object, request.POST)
@@ -150,7 +159,17 @@ def user_change_password_view(request):
 
 
 # User logout view 
-@login_required
+@login_required(login_url='users:user_login')
 def user_logout_view(request):
     logout(request)
     return redirect('dogs:index')
+
+
+# User logout view 
+@login_required(login_url='users:user_login')
+def user_generate_new_password_view(request):
+    new_password = ''.join(random.sample(string.ascii_letters + string.digits, 12))
+    request.user.set_password(new_password)
+    request.user.save()
+    send_new_password(request.user.email, new_password)
+    return redirect(reverse('dogs:index'))
