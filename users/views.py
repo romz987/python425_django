@@ -30,61 +30,43 @@ from django.contrib.auth import (
     update_session_auth_hash
 )
 
+from django.contrib.auth.views import (
+    LoginView, 
+    PasswordChangeView, 
+    LogoutView
+)
+
+from django.views.generic import (
+    CreateView, 
+    UpdateView
+)
+
+from users.models import User
+from django.urls import reverse_lazy
 # Только авторизованные пользователи
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-# Create your views here.
-def user_register_view(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('dogs:index'))
 
-    # Создадим форму
-    form = UserRegisterForm()
+class UserRegisterView(CreateView):
 
-    if request.method == "POST":
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            new_user = form.save()
-            print(new_user)
-            print(form.cleaned_data['password'])
-            new_user.set_password(form.cleaned_data['password'])
-            new_user.save()
-            send_register_email(new_user.email)
-            return HttpResponseRedirect(reverse('users:user_login'))
-
-    context = {
+    model = User 
+    form_class = UserRegisterForm 
+    success_url = reverse_lazy('users:user_login')
+    template_name = 'users/user_register.html'
+    extra_context = {
         'title': 'Создать аккаунт',
-        'form': form
+
     }
 
-    return render(request, 'users/user_register.html', context=context)
 
+class UserLoginView(LoginView):
 
-# Loginka view
-def user_login_view(request):
-
-    if request.method == "POST":
-        form = UserLoginForm(request.POST)
-        if form.is_valid():
-            cleaned_data = form.cleaned_data
-            user = authenticate(
-                email=cleaned_data['email'], password=cleaned_data['password']
-            )
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponseRedirect(reverse('dogs:index'))
-            return HttpResponse(
-                "Вы либо не зарегистрированы, либо ввели неверный пароль"
-            )
-
-    context  = {
-        'title': 'Вход в аккаунт',
-        'form': UserLoginForm
+    form_class = UserLoginForm
+    template_name = 'users/user_login.html'
+    extra_context = {
+        'title':'Вход в аккаунт'
     }
-
-    return render(request, 'users/user_login.html', context=context) 
 
 
 # User page view
@@ -173,3 +155,58 @@ def user_generate_new_password_view(request):
     request.user.save()
     send_new_password(request.user.email, new_password)
     return redirect(reverse('dogs:index'))
+
+
+# Create your views here.
+# def user_register_view(request):
+#     if request.user.is_authenticated:
+#         return HttpResponseRedirect(reverse('dogs:index'))
+#
+#     # Создадим форму
+#     form = UserRegisterForm()
+#
+#     if request.method == "POST":
+#         form = UserRegisterForm(request.POST)
+#         if form.is_valid():
+#             new_user = form.save()
+#             print(new_user)
+#             print(form.cleaned_data['password'])
+#             new_user.set_password(form.cleaned_data['password'])
+#             new_user.save()
+#             send_register_email(new_user.email)
+#             return HttpResponseRedirect(reverse('users:user_login'))
+#
+#     context = {
+#         'title': 'Создать аккаунт',
+#         'form': form
+#     }
+#
+#     return render(request, 'users/user_register.html', context=context)
+
+
+# Loginka view
+# def user_login_view(request):
+#
+#     if request.method == "POST":
+#         form = UserLoginForm(request.POST)
+#         if form.is_valid():
+#             cleaned_data = form.cleaned_data
+#             user = authenticate(
+#                 email=cleaned_data['email'], password=cleaned_data['password']
+#             )
+#             if user is not None:
+#                 if user.is_active:
+#                     login(request, user)
+#                     return HttpResponseRedirect(reverse('dogs:index'))
+#             return HttpResponse(
+#                 "Вы либо не зарегистрированы, либо ввели неверный пароль"
+#             )
+#
+#     context  = {
+#         'title': 'Вход в аккаунт',
+#         'form': UserLoginForm
+#     }
+#
+#     return render(request, 'users/user_login.html', context=context) 
+
+
