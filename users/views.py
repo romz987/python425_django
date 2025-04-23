@@ -15,7 +15,8 @@ from users.forms import (
     UserRegisterForm, 
     UserLoginForm,
     UserUpdateForm,
-    UserChangePasswordForm
+    UserChangePasswordForm,
+    UserForm
 )
 
 from users.services import (
@@ -69,28 +70,43 @@ class UserLoginView(LoginView):
     }
 
 
-# User page view
-@login_required(login_url='users:user_login')
-def user_profile_view(request):
+class UserProfileView(UpdateView):
+    model = User 
+    form_class = UserForm 
+    template_name = 'users/user_profile_read_only.html'
 
-    # получаем данные пользователя 
-    user_object = request.user
+    def get_object(self, queryset=None):
+        return self.request.user
 
-    # проверяем полученные данные на содержимое 
-    if user_object.first_name and user_object.last_name:
-        user_name = user_object.first_name + ' ' + user_object.last_name
-    else:
-        user_name = user_object
 
-    context = {
-        'title': f'Ваш профиль {user_name}'
-    }
-    
-    return render(
-        request, 
-        'users/user_profile_read_only.html', 
-        context=context
-    )
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data()
+        context_data['title'] = f'Ваш профиль {self.get_object()}'
+        return context_data
+
+
+# # User page view
+# @login_required(login_url='users:user_login')
+# def user_profile_view(request):
+#
+#     # получаем данные пользователя 
+#     user_object = request.user
+#
+#     # проверяем полученные данные на содержимое 
+#     if user_object.first_name and user_object.last_name:
+#         user_name = user_object.first_name + ' ' + user_object.last_name
+#     else:
+#         user_name = user_object
+#
+#     context = {
+#         'title': f'Ваш профиль {user_name}'
+#     }
+#     
+#     return render(
+#         request, 
+#         'users/user_profile_read_only.html', 
+#         context=context
+#     )
 
 
 @login_required(login_url='users:user_login')

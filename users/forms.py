@@ -64,3 +64,15 @@ class UserLoginForm(StyleFormMixin, AuthenticationForm):
 
 class UserChangePasswordForm(StyleFormMixin, PasswordChangeForm):
     pass
+
+
+class UserForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = User 
+        fields = {
+            'email', 
+            'first_name', 
+            'last_name', 
+            'phone', 
+            'avatar'
+        }
