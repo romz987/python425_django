@@ -113,6 +113,10 @@ class UserPasswordChangeView(PasswordChangeView):
         return context_data
 
 
+class UserLogoutView(LogoutView):
+    pass
+
+
 @login_required(login_url='users:user_login')
 def user_update_view(request):
     user_object = request.user
@@ -135,13 +139,6 @@ def user_update_view(request):
         'form': UserUpdateForm(instance=user_object)
     }
     return render(request, 'users/user_update.html', context=context)
-
-
-# User logout view 
-@login_required(login_url='users:user_login')
-def user_logout_view(request):
-    logout(request)
-    return redirect('dogs:index')
 
 
 # User logout view 
@@ -254,3 +251,9 @@ def user_generate_new_password_view(request):
 #     )
 
 
+# # User logout view 
+# @login_required(login_url='users:user_login')
+# def user_logout_view(request):
+#     logout(request)
+#     return redirect('dogs:index')
+#

@@ -8,7 +8,7 @@ app_name = UsersConfig.name
 
 urlpatterns = [
     path('', UserLoginView.as_view(), name='user_login'),
-    path('logout/', user_logout_view, name='user_logout'),
+    path('logout/', UserLogoutView.as_view(), name='user_logout'),
     path('register/', UserRegisterView.as_view(), name='user_register'),
     path('profile/', UserProfileView.as_view(), name='user_profile'),
     path('update/', UserUpdateView.as_view(), name='user_update'),
