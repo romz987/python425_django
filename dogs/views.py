@@ -14,7 +14,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (
     CreateView,
     UpdateView,
-    DeleteView
+    DeleteView,
+    DetailView,
+    ListView
 )
 
 # Create your views here.
@@ -45,12 +47,15 @@ def breed_dogs_list_view(request, pk: int):
     return render(request, 'dogs/dogs.html', context=context)
 
 
-def dog_list_view(request):
-    context = {
-        'objects_list': Dog.objects.all(),
-        'title': f'Все наши собаки',
-    }   
-    return render(request, 'dogs/dogs.html', context)
+class DogListView(ListView):
+    model = Dog 
+    template_name = 'dogs/dogs.html'
+    context_object_name = 'objects_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Все наши собаки'
+        return context
 
 
 # CRUD
@@ -67,15 +72,17 @@ class DogCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-@login_required(login_url='users:user_login')
-def dog_detail_view(request, pk):
-    """ Вернуть детальную информацию о собаке """
-    dog_object = Dog.objects.get(pk=pk)
-    context = {
-        'object': dog_object,
-        'title': dog_object.name + ' - ' + dog_object.breed.name
-    }
-    return render(request, 'dogs/detail.html', context=context)
+class DogDetailView(LoginRequiredMixin, DetailView):
+    model = Dog 
+    template_name = 'dogs/detail.html'
+    context_object_name = 'object'
+    login_url = reverse_lazy('users:user_login')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        dog = self.get_object()
+        context['title'] = f'{dog.name} - {dog.breed.name}'
+        return context
 
 
 class DogUpdateView(LoginRequiredMixin, UpdateView):
@@ -159,4 +166,24 @@ class DogDeleteView(LoginRequiredMixin, DeleteView):
 #         'form': form
 #     }
 #     return render(request, 'dogs/create_update.html', context=context)
+
+
+# @login_required(login_url='users:user_login')
+# def dog_detail_view(request, pk):
+#     """ Вернуть детальную информацию о собаке """
+#     dog_object = Dog.objects.get(pk=pk)
+#     context = {
+#         'object': dog_object,
+#         'title': dog_object.name + ' - ' + dog_object.breed.name
+#     }
+#     return render(request, 'dogs/detail.html', context=context)
+
+
+
+# def dog_list_view(request):
+#     context = {
+#         'objects_list': Dog.objects.all(),
+#         'title': f'Все наши собаки',
+#     }   
+#     return render(request, 'dogs/dogs.html', context)
 

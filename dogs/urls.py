@@ -4,11 +4,11 @@ from dogs.views import (
     index_view, 
     breeds_list_view, 
     breed_dogs_list_view, 
-    dog_list_view,
-    dog_detail_view,
     DogDeleteView,
     DogCreateView,
-    DogUpdateView
+    DogUpdateView,
+    DogDetailView,
+    DogListView
 )
 
 
@@ -22,9 +22,9 @@ urlpatterns = [
     path('breeds/<int:pk>/dogs', breed_dogs_list_view, name='breed_dogs'),
 
     # dogs
-    path('dogs/', dog_list_view, name='dogs_list'),
+    path('dogs/', DogListView.as_view(), name='dogs_list'),
     path('dogs/create', DogCreateView.as_view(), name='dog_create'),
-    path('dogs/detail/<int:pk>/', dog_detail_view, name='dog_detail'),
+    path('dogs/detail/<int:pk>/', DogDetailView.as_view(), name='dog_detail'),
     path('dogs/update/<int:pk>/', DogUpdateView.as_view(), name='dog_update'),
     path('dogs/delete/<int:pk>/', DogDeleteView.as_view(), name='dog_delete')
 ]
