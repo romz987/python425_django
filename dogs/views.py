@@ -19,32 +19,46 @@ from django.views.generic import (
     ListView
 )
 
-# Create your views here.
-def index_view(request):
-    context = {        
-        'objects_list': Breed.objects.all()[:3],
-        'title': 'Питомник - Главная страница'
-    }
-    return render(request, 'dogs/index.html', context=context)
+
+class IndexView(ListView):
+    model = Breed
+    template_name = 'dogs/index.html'
+    context_object_name = 'objects_list'
+
+    def get_queryset(self):
+        return Breed.objects.all()[:3]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Питомник - Главная страница'
+        return context
 
 
-# отображение всех объектов независимо от модели 
-def breeds_list_view(request):
-    context = {
-        'objects_list': Breed.objects.all(),
-        'title': 'Питомник - Все наши породы'
-    }
-    return render(request, 'dogs/breeds.html', context=context)
+class BreedsListView(ListView):
+    model = Breed
+    template_name = 'dogs/breeds.html'
+    context_object_name = 'objects_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Питомник - Все наши породы'
+        return context
 
 
-def breed_dogs_list_view(request, pk: int):
-    breed_object = Breed.objects.get(pk=pk)
-    context = {
-        'objects_list': Dog.objects.filter(breed_id=pk),
-        'title': f'Собаки породы - {breed_object}',
-        'breed_pk': breed_object.pk
-    }
-    return render(request, 'dogs/dogs.html', context=context)
+class BreedDogsListView(ListView):
+    model = Dog
+    template_name = 'dogs/dogs.html'
+    context_object_name = 'objects_list'
+
+    def get_queryset(self):
+        return Dog.objects.filter(breed_id=self.kwargs['pk'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        breed_object = Breed.objects.get(pk=self.kwargs['pk'])
+        context['title'] = f'Собаки породы - {breed_object}'
+        context['breed_pk'] = breed_object.pk
+        return context
 
 
 class DogListView(ListView):
@@ -179,11 +193,41 @@ class DogDeleteView(LoginRequiredMixin, DeleteView):
 #     return render(request, 'dogs/detail.html', context=context)
 
 
-
 # def dog_list_view(request):
 #     context = {
 #         'objects_list': Dog.objects.all(),
 #         'title': f'Все наши собаки',
 #     }   
 #     return render(request, 'dogs/dogs.html', context)
+
+
+# # отображение всех объектов независимо от модели 
+# def breeds_list_view(request):
+#     context = {
+#         'objects_list': Breed.objects.all(),
+#         'title': 'Питомник - Все наши породы'
+#     }
+#     return render(request, 'dogs/breeds.html', context=context)
+
+
+#
+# # Create your views here.
+# def index_view(request):
+#     context = {        
+#         'objects_list': Breed.objects.all()[:3],
+#         'title': 'Питомник - Главная страница'
+#     }
+#     return render(request, 'dogs/index.html', context=context)
+
+
+# def breed_dogs_list_view(request, pk: int):
+#     breed_object = Breed.objects.get(pk=pk)
+#     context = {
+#         'objects_list': Dog.objects.filter(breed_id=pk),
+#         'title': f'Собаки породы - {breed_object}',
+#         'breed_pk': breed_object.pk
+#     }
+#     return render(request, 'dogs/dogs.html', context=context)
+
+
 
