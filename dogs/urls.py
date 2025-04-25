@@ -8,7 +8,8 @@ from dogs.views import (
     dog_create_view,
     dog_detail_view,
     dog_update_view,
-    dog_delete_view
+    dog_delete_view,
+    DogCreateView
 )
 
 
@@ -23,7 +24,7 @@ urlpatterns = [
 
     # dogs
     path('dogs/', dog_list_view, name='dogs_list'),
-    path('dogs/create', dog_create_view, name='dog_create'),
+    path('dogs/create', DogCreateView.as_view(), name='dog_create'),
     path('dogs/detail/<int:pk>/', dog_detail_view, name='dog_detail'),
     path('dogs/update/<int:pk>/', dog_update_view, name='dog_update'),
     path('dogs/delete/<int:pk>/', dog_delete_view, name='dog_delete')
