@@ -13,7 +13,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # For CBV 
 from django.views.generic import (
     CreateView,
-    UpdateView
+    UpdateView,
+    DeleteView
 )
 
 # Create your views here.
@@ -77,36 +78,49 @@ def dog_detail_view(request, pk):
     return render(request, 'dogs/detail.html', context=context)
 
 
-@login_required(login_url='users:user_login')
-def dog_update_view(request, pk):
-    """ Изменить информацию о собаке """
-    dog_object = get_object_or_404(Dog, pk=pk)
-    if request.method == 'POST': 
-        form = DogForm(request.POST, request.FILES, instance=dog_object)
-        if form.is_valid():
-            dog_object = form.save()
-            dog_object.save()
-            return HttpResponseRedirect(reverse('dogs:dog_detail', args={pk:pk}))
-    context = {
-        'title': 'Изменить собаку',
-        'object': dog_object,
-        'form': DogForm(instance=dog_object)
-    }
-    return render(request, 'dogs/create_update.html', context=context)
+class DogUpdateView(LoginRequiredMixin, UpdateView):
+    model = Dog 
+    form_class = DogForm 
+    template_name = 'dogs/create_update.html'
+    login_url = reverse_lazy('user:user_login')
+    
+    def get_success_url(self):
+        return reverse_lazy(
+            'dogs:dog_detail',
+            kwargs={'pk':self.object.pk}
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Изменить собаку'
+        return context
 
 
-@login_required(login_url='users:user_login')
-def dog_delete_view(request, pk):
-    """ Удалить собаку """
-    dog_object = get_object_or_404(Dog, pk=pk)
-    if request.method == 'POST':
-        dog_object.delete()
-        return HttpResponseRedirect(reverse('dogs:dogs_list'))
-    context = {
-        'object': dog_object,
-        'title': 'Удалить собаку'
-    }
-    return render(request, 'dogs/delete.html', context=context)
+class DogDeleteView(LoginRequiredMixin, DeleteView):
+    model = Dog  
+    template_name = 'dogs/delete.html'
+    context_object_name = 'object'
+    login_url = 'users:user_login'
+    success_url = reverse_lazy('dogs:dogs_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Удалить собаку'
+        return context
+
+
+# @login_required(login_url='users:user_login')
+# def dog_delete_view(request, pk):
+#     """ Удалить собаку """
+#     dog_object = get_object_or_404(Dog, pk=pk)
+#     if request.method == 'POST':
+#         dog_object.delete()
+#         return HttpResponseRedirect(reverse('dogs:dogs_list'))
+#     context = {
+#         'object': dog_object,
+#         'title': 'Удалить собаку'
+#     }
+#     return render(request, 'dogs/delete.html', context=context)
 
 
 # CRUD 
