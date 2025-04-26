@@ -1,10 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404 
+from django.http import Http404
 
 # My imports 
 from dogs.models import Breed, Dog
 from dogs.forms import DogForm
 from django.http import HttpResponseRedirect 
-from django.urls import reverse, reverse_lazy 
+from django.urls import reverse, reverse_lazy  
 
 # Только авторизованные пользователи 
 from django.contrib.auth.decorators import login_required
@@ -79,10 +80,14 @@ class DogCreateView(LoginRequiredMixin, CreateView):
     form_class = DogForm
     template_name = 'dogs/create_update.html'
     success_url = reverse_lazy('dogs:dogs_list')
-    login_url = reverse_lazy('user:user_login')
+    login_url = reverse_lazy('users:user_login')
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user 
+        # form.instanc.owner = self.request.user 
+        # return super().form_valid(form)
+        self.object = form.save()
+        self.object.owner = self.request.user 
+        self.object.save()
         return super().form_valid(form)
 
 
@@ -105,16 +110,22 @@ class DogUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'dogs/create_update.html'
     login_url = reverse_lazy('user:user_login')
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Изменить собаку'
+        return context
+
     def get_success_url(self):
         return reverse_lazy(
             'dogs:dog_detail',
             kwargs={'pk':self.object.pk}
         )
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Изменить собаку'
-        return context
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.object.owner != self.request.user and not self.request.user.is_staff:
+            raise Http404
+        return self.object
 
 
 class DogDeleteView(LoginRequiredMixin, DeleteView):
