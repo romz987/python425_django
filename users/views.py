@@ -126,30 +126,6 @@ class UserLogoutView(LogoutView):
     pass
 
 
-@login_required(login_url='users:user_login')
-def user_update_view(request):
-    user_object = request.user
-    if request.method == 'POST':
-        form = UserUpdateForm(
-            request.POST, 
-            request.FILES, 
-            instance=user_object
-        )
-        if form.is_valid():
-            user_object = form.save()
-            user_object.save()
-            return HttpResponseRedirect(reverse('users:user_profile'))
-    context = {
-        'object': user_object,
-        'title': (
-            f'Изменить профиль {user_object.email} '
-            #f'{user_object.last_name}'
-        ),
-        'form': UserUpdateForm(instance=user_object)
-    }
-    return render(request, 'users/user_update.html', context=context)
-
-
 # User logout view 
 @login_required(login_url='users:user_login')
 def user_generate_new_password_view(request):
@@ -266,3 +242,27 @@ def user_generate_new_password_view(request):
 #     logout(request)
 #     return redirect('dogs:index')
 #
+
+# @login_required(login_url='users:user_login')
+# def user_update_view(request):
+#     user_object = request.user
+#     if request.method == 'POST':
+#         form = UserUpdateForm(
+#             request.POST, 
+#             request.FILES, 
+#             instance=user_object
+#         )
+#         if form.is_valid():
+#             user_object = form.save()
+#             user_object.save()
+#             return HttpResponseRedirect(reverse('users:user_profile'))
+#     context = {
+#         'object': user_object,
+#         'title': (
+#             f'Изменить профиль {user_object.email} '
+#             #f'{user_object.last_name}'
+#         ),
+#         'form': UserUpdateForm(instance=user_object)
+#     }
+#     return render(request, 'users/user_update.html', context=context)
+
