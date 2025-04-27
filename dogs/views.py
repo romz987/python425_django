@@ -140,6 +140,12 @@ class DogDeleteView(LoginRequiredMixin, DeleteView):
         context['title'] = 'Удалить собаку'
         return context
 
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.object.owner != self.request.user and not self.request.user.is_staff:
+            raise Http404
+        return self.object
+
 
 # @login_required(login_url='users:user_login')
 # def dog_delete_view(request, pk):
