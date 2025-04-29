@@ -103,6 +103,8 @@ class DogDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         dog = self.get_object()
         context['title'] = f'{dog.name} - {dog.breed.name}'
+        # информация о родителях
+        context['parents'] = DogParent.objects.filter(dog=self.object)
         return context
 
 

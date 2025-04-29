@@ -2,29 +2,54 @@
 {% load my_tags %}
 {% block content %}
 
-<div class="col-md-4">
-  <div class="card mb-4 box-shadow">
-    <img class="card-img-top"
-      src="{{ object.photo|dogs_media }}" width="300" height="320"
-      alt="Card image cap">
-    <div class="card-body">
-      <p class="card-text">Кличка: {{ object.name }}</p><br>
-      <p class="card-text">Порода: {{ object.breed }}</p><br>
-      <span class="text-muted">Дата рождения: {{ object.birth_date|default:"Не указано" }}</span><br>
-      <span class="text-muted">Email хозяина: {{ object.owner|default:"Без хозяина" }}</span><br>
-      <span class="text-muted">Имя хозяина: {{ object.owner.first_name|default:"Не указано" }}</span><br>
-      <span class="text-muted">Телефон хозяина: {{ object.owner.phone|default:"Не указано" }}</span><br>
-      <span class="text-muted">Телеграм хозяина: {{ object.owner.telegram|default:"Не указано" }}</span>
+<div class="row">
 
-    </div>
-    <div class="card-footer">
-      {% if user.is_staff or user == object.owner %}
-        <a class="btn btn-link" href="{% url 'dogs:dog_update' object.pk %}">изменить</a>
-        <a class="btn btn-link" href="{% url 'dogs:dog_delete' object.pk %}">удалить</a>
-      {% endif %}
+  <div class="col-md-4">
+    <div class="card mb-4 box-shadow">
+      <img class="card-img-top"
+        src="{{ object.photo|dogs_media }}" width="300" height="320"
+        alt="Card image cap">
+      <div class="card-body">
+        <p class="card-text">Кличка: {{ object.name }}</p><br>
+        <p class="card-text">Порода: {{ object.breed }}</p><br>
+        <span class="text-muted">Дата рождения: {{ object.birth_date|default:"Не указано" }}</span><br>
+        <span class="text-muted">Email хозяина: {{ object.owner|default:"Без хозяина" }}</span><br>
+        <span class="text-muted">Имя хозяина: {{ object.owner.first_name|default:"Не указано" }}</span><br>
+        <span class="text-muted">Телефон хозяина: {{ object.owner.phone|default:"Не указано" }}</span><br>
+        <span class="text-muted">Телеграм хозяина: {{ object.owner.telegram|default:"Не указано" }}</span>
+      </div>
+      <div class="card-footer">
+        {% if user.is_staff or user == object.owner %}
+          <a class="btn btn-link" href="{% url 'dogs:dog_update' object.pk %}">изменить</a>
+          <a class="btn btn-link" href="{% url 'dogs:dog_delete' object.pk %}">удалить</a>
+        {% endif %}
+      </div>
     </div>
   </div>
+
+
+  <div class="col-md-4">
+    <div class="card mb-4 box-shadow">
+      <div class="card-header"><p>Родословная</p></div>
+      <div class="card-body">
+        {% if parents %}
+          {% for parent in parents %}
+            <p>Имя: {{ parent.name }}</p>
+            <p>Порода: {{ parent.breed }}</p>
+            <p>Дата рождения: {{ parent.birth_date|default:"Не указано" }}</p>
+            {% if not forloop.last %}
+              <hr>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          <p class="text-muted">Информация о родителях отсутствует.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
 </div>
+
 
 
 {% endblock %}
