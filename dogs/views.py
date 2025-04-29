@@ -80,7 +80,7 @@ class DogCreateView(LoginRequiredMixin, CreateView):
     # Модель базы данных
     model = Dog
     form_class = DogForm
-    template_name = 'dogs/create_update.html'
+    template_name = 'dogs/create.html'
     success_url = reverse_lazy('dogs:dogs_list')
     login_url = reverse_lazy('users:user_login')
 
@@ -111,7 +111,7 @@ class DogDetailView(LoginRequiredMixin, DetailView):
 class DogUpdateView(LoginRequiredMixin, UpdateView):
     model = Dog 
     form_class = DogForm 
-    template_name = 'dogs/create_update.html'
+    template_name = 'dogs/update.html'
     login_url = reverse_lazy('user:user_login')
 
     def get_success_url(self):
