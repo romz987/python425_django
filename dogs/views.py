@@ -1,11 +1,13 @@
+from django.template.context_processors import request
 from django.shortcuts import render, get_object_or_404 
 from django.http import Http404
 
 # My imports 
-from dogs.models import Breed, Dog
-from dogs.forms import DogForm
+from dogs.models import Breed, Dog, DogParent
+from dogs.forms import DogForm, DogParentForm
 from django.http import HttpResponseRedirect 
 from django.urls import reverse, reverse_lazy  
+from django.forms import inlineformset_factory
 
 # Только авторизованные пользователи 
 from django.contrib.auth.decorators import login_required
@@ -109,11 +111,6 @@ class DogUpdateView(LoginRequiredMixin, UpdateView):
     form_class = DogForm 
     template_name = 'dogs/create_update.html'
     login_url = reverse_lazy('user:user_login')
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Изменить собаку'
-        return context
 
     def get_success_url(self):
         return reverse_lazy(
@@ -123,9 +120,36 @@ class DogUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
-        if self.object.owner != self.request.user and not self.request.user.is_staff:
+        if (self.object.owner != self.request.user 
+                and not self.request.user.is_staff):
             raise Http404
         return self.object
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        DogParentFormset = inlineformset_factory(
+            Dog, 
+            DogParent,
+            form = DogParentForm,
+            extra=1
+        )
+        if self.request.method == "POST":
+            formset = DogParentFormset(self.request.POST, instance=self.object)
+        else:
+            formset = DogParentFormset(instance=self.object)
+        object_ = self.get_object()
+        context['title'] = f'Изменить собаку {object_}'
+        context['formset'] = formset
+        return context
+
+    def form_valid(self, form):
+        context_data = self.get_context_data()
+        formset = context_data['formset']
+        self.object = form.save()
+        if formset.is_valid():
+            formset.instance = self.object 
+            formset.save()
+        return super().form_valid(form)
 
 
 class DogDeleteView(LoginRequiredMixin, DeleteView):

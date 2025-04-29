@@ -1,6 +1,6 @@
 import datetime
 from django import forms 
-from dogs.models import Dog 
+from dogs.models import Dog, DogParent
 from django.forms import DateInput
 
 from users.forms import StyleFormMixin
@@ -27,3 +27,9 @@ class DogForm(StyleFormMixin, forms.ModelForm):
                 )
         return cleaned_data
 
+
+
+class DogParentForm(StyleFormMixin, forms.ModelForm):
+    class Meta: 
+        model = DogParent
+        fields = '__all__'
