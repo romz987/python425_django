@@ -10,6 +10,8 @@ from dogs.views import (
     DogDetailView,
     DogListView
 )
+# Redis  
+from django.views.decorators.cache import cache_page
 
 
 app_name = DogsConfig.name  
@@ -17,14 +19,14 @@ app_name = DogsConfig.name
 
 urlpatterns = [
     # breads
-    path('', IndexView.as_view(), name='index'),
-    path('breeds/', BreedsListView.as_view(), name='breeds'),
-    path('breeds/<int:pk>/dogs', BreedDogsListView.as_view(), name='breed_dogs'),
+    path('', cache_page(60)(IndexView.as_view()), name='index'),
+    path('breeds/', cache_page(60)(BreedsListView.as_view()), name='breeds'),    
+    path('breeds/<int:pk>/dogs', cache_page(60)(BreedDogsListView.as_view()), name='breed_dogs'),
 
     # dogs
-    path('dogs/', DogListView.as_view(), name='dogs_list'),
-    path('dogs/create', DogCreateView.as_view(), name='dog_create'),
-    path('dogs/detail/<int:pk>/', DogDetailView.as_view(), name='dog_detail'),
-    path('dogs/update/<int:pk>/', DogUpdateView.as_view(), name='dog_update'),
-    path('dogs/delete/<int:pk>/', DogDeleteView.as_view(), name='dog_delete')
+    path('dogs/', cache_page(DogListView.as_view()), name='dogs_list'),
+    path('dogs/create', cache_page(DogCreateView.as_view()), name='dog_create'),
+    path('dogs/detail/<int:pk>/', cache_page(DogDetailView.as_view()), name='dog_detail'),
+    path('dogs/update/<int:pk>/', cache_page(DogUpdateView.as_view()), name='dog_update'),
+    path('dogs/delete/<int:pk>/', cache_page(DogDeleteView.as_view()), name='dog_delete')
 ]
