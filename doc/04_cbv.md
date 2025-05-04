@@ -1,4 +1,5 @@
-# Class Based Views  
+# Class Based Views 
+
   
 ----
 ## Основные методы в CBV:  
@@ -9,7 +10,7 @@ form_valid(form)	            Что делать, если форма прошл
 form_invalid(form)	            Что делать, если форма не прошла валидацию.  
 get_queryset()	                Каким QuerySet'ом заполнять список объектов (ListView).  
 get_object()	                Как получить конкретный объект (DetailView, UpdateView, DeleteView).  
-get_context_data(**kwargs)	    Дополнить контекст шаблона своими данными.  
+get_context_data(**kwargs)	    Дополнить контекст шаблона данными.  
 get_success_url()	            Куда перенаправлять пользователя после успешной операции. 
 
 
