@@ -10,11 +10,18 @@ class DogForm(StyleFormMixin, forms.ModelForm):
     
     class Meta:
         model = Dog 
+        fields = '__all__'
         exclude = ('owner', )
-        # fields = '__all__'
         # Используем виджет date
         widgets = {
-            'birth_date': DateInput(attrs={'type': 'date'})          
+            'birth_date': forms.DateInput(
+                attrs={
+                    'type': 'date',
+                    'class': 'form-control'
+                },
+                # Если явно не указать формат то не работает
+                format='%Y-%m-%d'
+            )
         }
 
     def clean_birth_date(self):
