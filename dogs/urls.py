@@ -24,9 +24,9 @@ urlpatterns = [
     path('breeds/<int:pk>/dogs', cache_page(60)(BreedDogsListView.as_view()), name='breed_dogs'),
 
     # dogs
-    path('dogs/', cache_page(60)(DogListView.as_view()), name='dogs_list'),
+    path('dogs/', DogListView.as_view(), name='dogs_list'),
     path('dogs/create', cache_page(60)(DogCreateView.as_view()), name='dog_create'),
-    path('dogs/detail/<int:pk>/', cache_page(60)(DogDetailView.as_view()), name='dog_detail'),
-    path('dogs/update/<int:pk>/', cache_page(60)(DogUpdateView.as_view()), name='dog_update'),
-    path('dogs/delete/<int:pk>/', cache_page(60)(DogDeleteView.as_view()), name='dog_delete')
+    path('dogs/detail/<int:pk>/', DogDetailView.as_view(), name='dog_detail'),
+    path('dogs/update/<int:pk>/', DogUpdateView.as_view(), name='dog_update'),
+    path('dogs/delete/<int:pk>/', DogDeleteView.as_view(), name='dog_delete')
 ]
