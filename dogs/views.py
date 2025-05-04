@@ -109,41 +109,54 @@ class DogDetailView(LoginRequiredMixin, DetailView):
 
 
 class DogUpdateView(LoginRequiredMixin, UpdateView):
+    # Укажем, с какой моделью и формой работает CBV
     model = Dog 
-    form_class = DogForm 
+    # Укажем, что должна использоваться пользовательская форма
+    # вместо формы по умолчанию
+    form_class = DogForm
+    # Укажем используемый шаблон
     template_name = 'dogs/update.html'
+    # Если пользователь не авторизован, то он отправится на 
+    # этот url
     login_url = reverse_lazy('user:user_login')
 
+    # Куда отправим пользователя после успешного сохранения формы
     def get_success_url(self):
         return reverse_lazy(
             'dogs:dog_detail',
             kwargs={'pk':self.object.pk}
         )
 
+    # Как получить редактируемый объект
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
+        print("1. Объект ДО формы:", self.object.birth_date)
         if (self.object.owner != self.request.user 
                 and not self.request.user.is_staff):
             raise Http404
         return self.object
-    
+   
+    # Дополняет контекст шаблона
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # print("2. Объект ПОСЛЕ формы:", self.object.birth_date)
+        # print("Form initial data:", context['form'].initial)
+        # print("Form instance data:", vars(context['form'].instance))
         DogParentFormset = inlineformset_factory(
             Dog, 
             DogParent,
             form = DogParentForm,
-            extra=1
+            extra=2
         )
         if self.request.method == "POST":
             formset = DogParentFormset(self.request.POST, instance=self.object)
         else:
             formset = DogParentFormset(instance=self.object)
-        object_ = self.get_object()
-        context['title'] = f'Изменить собаку {object_}'
+        context['title'] = f'Изменить собаку {self.object}'
         context['formset'] = formset
         return context
 
+    # Выполняется, если основная форма прошла валидацию
     def form_valid(self, form):
         context_data = self.get_context_data()
         formset = context_data['formset']
