@@ -37,31 +37,24 @@ class IndexView(ListView):
         return context
 
 
-class BreedsListView(ListView):
+class BreedListView(ListView):
     model = Breed
+    extra_context = {
+        'title': 'Все наши породы'
+    }
     template_name = 'dogs/breeds.html'
-    context_object_name = 'objects_list'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Питомник - Все наши породы'
-        return context
 
 
-class BreedDogsListView(ListView):
+class DogBreedListView(LoginRequiredMixin, ListView):
     model = Dog
     template_name = 'dogs/dogs.html'
-    context_object_name = 'objects_list'
-
+    extra_context = {
+        'title': 'Собаки выбранной породы'
+    }
+    
     def get_queryset(self):
-        return Dog.objects.filter(breed_id=self.kwargs['pk'])
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        breed_object = Breed.objects.get(pk=self.kwargs['pk'])
-        context['title'] = f'Собаки породы - {breed_object}'
-        context['breed_pk'] = breed_object.pk
-        return context
+        queryset = super().get_queryset().filter(breed_id=self.kwargs.get('pk'))
+        return queryset
 
 
 class DogListView(ListView):
@@ -75,7 +68,6 @@ class DogListView(ListView):
         return context
 
 
-# CRUD
 class DogCreateView(LoginRequiredMixin, CreateView):
     # Модель базы данных
     model = Dog
