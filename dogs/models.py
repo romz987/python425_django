@@ -42,7 +42,10 @@ class Dog(models.Model):
         **NULLABLE, 
         verbose_name='Дата рождения'
     )
-
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name='Активность'
+    )
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, 
         on_delete=models.SET_NULL, 
