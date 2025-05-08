@@ -12,7 +12,11 @@ from users.models import UserRoles
 
 # Только авторизованные пользователи 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin, 
+    PermissionRequiredMixin
+)
+from django.core.exceptions import PermissionDenied
 
 # For CBV 
 from django.views.generic import (
@@ -104,6 +108,8 @@ class DogCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         # form.instanc.owner = self.request.user 
         # return super().form_valid(form)
+        if self.request.user.role != UserRoles.USER:
+            raise PermissionDenied()
         self.object = form.save()
         self.object.owner = self.request.user 
         self.object.save()
@@ -149,8 +155,8 @@ class DogUpdateView(LoginRequiredMixin, UpdateView):
         self.object = super().get_object(queryset)
         print("1. Объект ДО формы:", self.object.birth_date)
         if (self.object.owner != self.request.user 
-                and not self.request.user.is_staff):
-            raise Http404
+                and self.request.user.role != UserRoles.ADMIN):
+            raise PermissionDenied()
         return self.object
    
     # Дополняет контекст шаблона
@@ -184,12 +190,14 @@ class DogUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class DogDeleteView(LoginRequiredMixin, DeleteView):
+class DogDeleteView(PermissionRequiredMixin, DeleteView):
     model = Dog  
     template_name = 'dogs/delete.html'
     context_object_name = 'object'
     login_url = 'users:user_login'
     success_url = reverse_lazy('dogs:dogs_list')
+    permission_required = 'dogs.delete_dog'
+    permission_denied_message = 'У вас нет для данного действия'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
