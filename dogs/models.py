@@ -52,6 +52,11 @@ class Dog(models.Model):
         **NULLABLE, 
         verbose_name='Хозяин'
     )
+    views = models.IntegerField(
+        default=0, 
+        verbose_name='Просмотры'
+    )
+
 
     def __str__(self):
         return f'{self.name} ({self.breed})'
@@ -59,6 +64,10 @@ class Dog(models.Model):
     class Meta: 
         verbose_name = 'dog'
         verbose_name_plural = 'dogs'
+
+    def views_count(self):
+        self.views += 1 
+        self.save()
 
 
 class DogParent(models.Model):
