@@ -24,7 +24,7 @@ app_name = DogsConfig.name
 urlpatterns = [
     # breads
     path('', cache_page(1)(IndexView.as_view()), name='index'),
-    path('breeds/', cache_page(1)(BreedListView.as_view()), name='breeds'),    
+    path('breeds/', BreedListView.as_view(), name='breeds'),    
     
     # dogs
     path('breeds/<int:pk>/dogs', DogBreedListView.as_view(), name='breed_dogs'),
