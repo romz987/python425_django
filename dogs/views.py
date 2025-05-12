@@ -4,7 +4,7 @@ from django.http import Http404
 
 # My imports
 from dogs.models import Breed, Dog, DogParent
-from dogs.forms import DogForm, DogParentForm
+from dogs.forms import DogForm, DogParentForm, DogAdminForm
 from dogs.services import send_views_email
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
@@ -167,6 +167,18 @@ class DogUpdateView(LoginRequiredMixin, UpdateView):
         ):
             raise PermissionDenied()
         return self.object
+
+    
+    def get_form_class(self):
+        dog_forms = {
+            UserRoles.ADMIN: DogAdminForm,
+            UserRoles.MODERATOR: DogForm,
+            UserRoles.USER: DogForm
+        }
+        user_role = self.request.user.role
+        dog_form_class = dog_forms[user_role]
+        return dog_form_class
+
 
     # Дополняет контекст шаблона
     def get_context_data(self, **kwargs):
