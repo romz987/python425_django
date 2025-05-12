@@ -37,9 +37,15 @@ from django.contrib.auth.views import (
     LogoutView
 )
 
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin
+)
+
 from django.views.generic import (
     CreateView, 
-    UpdateView
+    UpdateView,
+    DeleteView,
+    ListView
 )
 
 from users.models import User
@@ -124,6 +130,19 @@ class UserLogoutView(LogoutView):
         'title':'Выход из аккаунта'
     }
     pass
+
+
+class UserListView(LoginRequiredMixin, ListView):
+    model = User 
+    extra_context = {
+        'title':'Питомник - все наши пользователи'
+    }
+    template_name = 'users/users.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(is_active=True)
+        return queryset
 
 
 # User logout view 
