@@ -18,5 +18,6 @@ urlpatterns = [
 
     # Просмотр других пользователей
     path('all_users/', UserListView.as_view(), name='users_list'),
+    path('profile/<int:pk>/', UserDetailView.as_view(), name='user_detail'),
 ]
 

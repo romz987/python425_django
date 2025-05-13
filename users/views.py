@@ -45,6 +45,7 @@ from django.views.generic import (
     CreateView, 
     UpdateView,
     DeleteView,
+    DetailView,
     ListView
 )
 
@@ -143,6 +144,17 @@ class UserListView(LoginRequiredMixin, ListView):
         queryset = super().get_queryset()
         queryset = queryset.filter(is_active=True)
         return queryset
+
+
+class UserDetailView(DetailView):
+    model = User 
+    template_name = 'users/user_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data()
+        user_obj = context_data['object']
+        context_data['title'] = f'Профиль пользователя {user_obj}'    
+        return context_data
 
 
 # User logout view 
