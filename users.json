@@ -1,1 +1,86 @@
-[{"model": "users.user", "pk": 1, "fields": {"password": "pbkdf2_sha256$1000000$bC6n2aR3GZe63p6nWzfZwt$flLoNksdnWMmIrDb5tI8dvsVlPT0Pj9fLJi8gdhqXUU=", "last_login": "2025-05-04T18:30:02.970Z", "is_superuser": true, "is_staff": true, "date_joined": "2025-03-30T21:56:56Z", "email": "admin@myhost.su", "role": "user", "first_name": "admin", "last_name": "admin", "phone": null, "telegram": null, "avatar": "users/8kv9m8.jpg", "is_active": true, "groups": [], "user_permissions": []}}, {"model": "users.user", "pk": 17, "fields": {"password": "pbkdf2_sha256$1000000$7CuNJDDaBdHsOHJFT98nK3$Do6BPFUO//viA7qVTxNhv9AN3BzWZHE3GAa07vbhH/c=", "last_login": "2025-05-03T16:06:10.837Z", "is_superuser": false, "is_staff": false, "date_joined": "2025-05-03T16:05:41.136Z", "email": "admin1@web.top", "role": "user", "first_name": "Anonymous", "last_name": "Anonymous", "phone": null, "telegram": null, "avatar": "", "is_active": true, "groups": [], "user_permissions": []}}, {"model": "users.user", "pk": 18, "fields": {"password": "pbkdf2_sha256$1000000$eIN4QiNTluo0OBlAn1wieV$rrIJ1R5nnJvS3EFXLikfglKXwNh5xiRu8AVKmSrvVug=", "last_login": "2025-05-05T20:07:04.284Z", "is_superuser": false, "is_staff": false, "date_joined": "2025-05-04T18:32:45.171Z", "email": "rbalashou@yandex.ru", "role": "user", "first_name": "Роман", "last_name": "Балашов", "phone": "1234456767", "telegram": "@romz", "avatar": "users/squid-game-anime_69NEE16.jpg", "is_active": true, "groups": [], "user_permissions": []}}]
+[
+  {
+    "model": "users.user", 
+    "pk": 1, 
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$mgXME9pARX3qi7Aum9edHR$m1VaedZNlwhVq3NJRtKKOM0HlrgIRLcG0wIftEoyed0=", 
+      "last_login": "2025-05-12T07:30:34.233Z", 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "date_joined": "2025-05-06T20:48:36.830Z", 
+      "email": "admin@myhost.su", 
+      "role": "admin", 
+      "first_name": "Admin", 
+      "last_name": "Adminov", 
+      "phone": null, 
+      "telegram": null, 
+      "avatar": "", 
+      "is_active": true, 
+      "groups": [], 
+      "user_permissions": []
+    }
+  }, 
+  {
+    "model": "users.user", 
+    "pk": 2, 
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$ftpb14S9oF1GmYUjD0N46s$qkBH7Np1oPj6Ch3E247u5RZUr7DL+QvkONNQ/Z+9SWk=", 
+      "last_login": "2025-05-08T21:54:28.765Z", 
+      "is_superuser": false, 
+      "is_staff": true, 
+      "date_joined": "2025-05-06T20:48:37Z", 
+      "email": "moderator@myhost.su", 
+      "role": "moderator", 
+      "first_name": "Moder", 
+      "last_name": "Moderov", 
+      "phone": null, 
+      "telegram": null, 
+      "avatar": "", 
+      "is_active": true, 
+      "groups": [], 
+      "user_permissions": []
+    }
+  }, 
+  {
+    "model": "users.user", 
+    "pk": 3, 
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$WkcTGCShy5JlEqpYymCxmK$l6VHVN3Lu2AorojL5KjMt3itxpjP8CLFVQUhlYqradY=", 
+      "last_login": "2025-05-11T20:53:37.094Z", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "date_joined": "2025-05-06T20:48:37.439Z", 
+      "email": "user1@myhost.su", 
+      "role": "user", 
+      "first_name": "User", 
+      "last_name": "Userov", 
+      "phone": null, 
+      "telegram": null, 
+      "avatar": "users/squid-game-anime_tpYRgYM.jpg", 
+      "is_active": true, 
+      "groups": [], 
+      "user_permissions": []
+    }
+  }, 
+  {
+    "model": "users.user", 
+    "pk": 4, 
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$Q1FmOyHAPDXSMpOAFYUjli$sRb0OYXu7c/eDQOY9Vae2pvzkqDNSXqiX0jTBcAT3tM=", 
+      "last_login": "2025-05-11T20:20:06.228Z", 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "date_joined": "2025-05-11T20:19:43.309Z", 
+      "email": "rbalashou@yandex.ru", 
+      "role": "user", 
+      "first_name": "Anonymous", 
+      "last_name": "Anonymous", 
+      "phone": null, 
+      "telegram": null, 
+      "avatar": "", 
+      "is_active": true, 
+      "groups": [], 
+      "user_permissions": []
+    }
+  }
+]

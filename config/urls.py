@@ -27,7 +27,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('dogs.urls', namespace='dogs')),
-    # добавить urls для... 
     path('users/', include('users.urls', namespace='users')),
+    path('reviews/', include('reviews.urls', namespace='reviews')),
     # добавить результаты выполнения static в список urlpatterns
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
