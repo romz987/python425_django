@@ -44,6 +44,7 @@ class BreedListView(ListView):
     model = Breed
     extra_context = {"title": "Все наши породы"}
     template_name = "dogs/breeds.html"
+    paginate_by = 3
 
 
 class DogBreedListView(LoginRequiredMixin, ListView):
@@ -60,6 +61,7 @@ class DogListView(ListView):
     model = Dog
     template_name = "dogs/dogs.html"
     context_object_name = "objects_list"
+    paginate_by = 3
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
