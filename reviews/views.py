@@ -43,7 +43,7 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         if self.request.user.role not in [UserRoles.USER, UserRoles.ADMIN]: 
             return HttpResponseForbidden
-        slug_object = form.save 
+        slug_object = form.save() 
         print(slug_object.slug)
         if slug_object.slug == 'temp_slug':
             slug_object.slug = slug_generator()
