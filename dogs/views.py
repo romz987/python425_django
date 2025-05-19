@@ -13,8 +13,13 @@ from users.models import UserRoles
 
 # Только авторизованные пользователи
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin, 
+    PermissionRequiredMixin
+)
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
+
 
 # For CBV
 from django.views.generic import (
@@ -53,7 +58,9 @@ class DogBreedListView(LoginRequiredMixin, ListView):
     extra_context = {"title": "Собаки выбранной породы"}
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(breed_id=self.kwargs.get("pk"))
+        queryset = (
+            super().get_queryset().filter(breed_id=self.kwargs.get("pk"))
+        )
         return queryset
 
 
@@ -89,8 +96,22 @@ class DogDeactivatedListView(LoginRequiredMixin, ListView):
         if self.request.user.role in [UserRoles.ADMIN, UserRoles.MODERATOR]:
             queryset = queryset.filter(is_active=False)
         if self.request.user.role == UserRoles.USER:
-            queryset = queryset.filter(is_active=False, owner=self.request.user)
+            queryset = (
+                queryset.filter(is_active=False, owner=self.request.user)
+            )
         return queryset
+
+
+class DogSearchListView(LoginRequiredMixin, ListView):
+    model = Dog 
+    template_name = 'dogs/dog_search_results.html'
+    queryset = Dog.objects.filter(name__icontains='м')
+
+    def get_queryset(self):
+        result = Dog.objects.filter(
+            Q(name__icontains='м')
+        )
+        return result
 
 
 class DogCreateView(LoginRequiredMixin, CreateView):

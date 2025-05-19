@@ -15,7 +15,8 @@ from dogs.views import (
     DogDetailView,
     DogListView,
     DogDeactivatedListView,
-    dog_toggle_activity
+    dog_toggle_activity,
+    DogSearchListView
 )
 
 app_name = DogsConfig.name  
@@ -30,6 +31,7 @@ urlpatterns = [
     path('breeds/<int:pk>/dogs', DogBreedListView.as_view(), name='breed_dogs'),
     path('dogs/', DogListView.as_view(), name='dogs_list'),
     path('dogs/deactivated/', DogDeactivatedListView.as_view(), name='dogs_deactivated_list'),
+    path('dogs/search/', DogSearchListView.as_view(), name='dog_search'),
     path('dogs/create', DogCreateView.as_view(), name='dog_create'),
     path('dogs/detail/<int:pk>/', DogDetailView.as_view(), name='dog_detail'),
     path('dogs/update/<int:pk>/', never_cache(DogUpdateView.as_view()), name='dog_update'),
