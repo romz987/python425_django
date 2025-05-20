@@ -1,7 +1,5 @@
 from django.urls import path 
-
 from reviews.apps import ReviewsConfig 
-
 from reviews.views import (
     ReviewListView, 
     ReviewDeactivatedListView, 
