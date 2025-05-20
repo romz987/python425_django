@@ -29,9 +29,8 @@ urlpatterns = [
     path('', cache_page(1)(IndexView.as_view()), name='index'),
     path('breeds/', BreedListView.as_view(), name='breeds'),    
     path('breeds/search', BreedSearchListView.as_view(), name='breed_search'),
-
+    # 
     path('breeds/search_all', BreedDogSearchListView.as_view(), name='breed_dog_search'),
-    
     # dogs
     path('breeds/<int:pk>/dogs', DogBreedListView.as_view(), name='breed_dogs'),
     path('dogs/', DogListView.as_view(), name='dogs_list'),
