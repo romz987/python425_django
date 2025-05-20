@@ -1,26 +1,19 @@
-from django.template.context_processors import request
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.http import Http404
-
 # My imports
 from dogs.models import Breed, Dog, DogParent
 from dogs.forms import DogForm, DogParentForm, DogAdminForm
 from dogs.services import send_views_email
-from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.forms import inlineformset_factory
 from users.models import UserRoles
-
 # Только авторизованные пользователи
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import (
     LoginRequiredMixin, 
     PermissionRequiredMixin
 )
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-
-
 # For CBV
 from django.views.generic import (
     CreateView,
@@ -133,11 +126,11 @@ class DogSearchListView(LoginRequiredMixin, ListView):
         return object_list
 
 
-class BreedDogSearchListView(LoginRequiredMixin, ListView): 
+class BreedDogSearchListView(LoginRequiredMixin, ListView):
     model = Breed 
     template_name = 'dogs/breed_dog_search_results.html'
     extra_context = {
-        'title':'Результаты поискового запроса'
+        'title': 'Результаты поискового запроса'
     }
 
     def get_queryset(self):
@@ -150,8 +143,6 @@ class BreedDogSearchListView(LoginRequiredMixin, ListView):
         )
         object_list = list(dog_object_list) + list(breed_object_list)
         return object_list
-
-
 
 
 class DogCreateView(LoginRequiredMixin, CreateView):
@@ -183,23 +174,24 @@ class DogDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         dog = self.get_object()
         context["title"] = f"{dog.name} - {dog.breed.name}"
-        # информация о родителях
         context["parents"] = DogParent.objects.filter(dog=self.object)
-        object_ = context["object"]
-        dog_object_increase = get_object_or_404(Dog, pk=object_.pk)
-        if object_.owner != self.request.user and self.request.user.role not in [
-            UserRoles.ADMIN,
-            UserRoles.MODERATOR,
-        ]:
-            dog_object_increase.views_count()
-        if object_.owner:
-            object_owner_email = object_.owner.email
-            # Email отправляется при каждом просмотре для удобства
-            if dog_object_increase.views % 20 == 0 and dog_object_increase.views != 0:
+        dog_object = context["object"]
+        dog_instance = get_object_or_404(Dog, pk=dog_object.pk)
+        
+        if (dog_object.owner != self.request.user and 
+                self.request.user.role not in [
+                    UserRoles.ADMIN, 
+                    UserRoles.MODERATOR
+                ]):
+            dog_instance.views_count()
+            
+        if dog_object.owner:
+            owner_email = dog_object.owner.email
+            if dog_instance.views % 20 == 0 and dog_instance.views != 0:
                 send_views_email(
-                    dog_object_increase.name,
-                    object_owner_email,
-                    dog_object_increase.views,
+                    dog_instance.name,
+                    owner_email,
+                    dog_instance.views,
                 )
         return context
 
@@ -246,9 +238,6 @@ class DogUpdateView(LoginRequiredMixin, UpdateView):
     # Дополняет контекст шаблона
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # print("2. Объект ПОСЛЕ формы:", self.object.birth_date)
-        # print("Form initial data:", context['form'].initial)
-        # print("Form instance data:", vars(context['form'].instance))
         DogParentFormset = inlineformset_factory(
             Dog, DogParent, form=DogParentForm, extra=2
         )
@@ -287,7 +276,8 @@ class DogDeleteView(PermissionRequiredMixin, DeleteView):
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
-        if self.object.owner != self.request.user and not self.request.user.is_staff:
+        if (self.object.owner != self.request.user 
+                and not self.request.user.is_staff):
             raise Http404
         return self.object
 
