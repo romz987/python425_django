@@ -15,7 +15,6 @@ urlpatterns = [
     path('update/', UserUpdateView.as_view(), name='user_update'),
     path('change_password', UserPasswordChangeView.as_view(), name='user_change_password'),
     path('profile/genpassword/', user_generate_new_password_view, name='user_generate_new_password'),
-
     # Просмотр других пользователей
     path('all_users/', UserListView.as_view(), name='users_list'),
     path('profile/<int:pk>/', UserDetailView.as_view(), name='user_detail'),
