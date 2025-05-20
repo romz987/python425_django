@@ -133,6 +133,27 @@ class DogSearchListView(LoginRequiredMixin, ListView):
         return object_list
 
 
+class BreedDogSearchListView(LoginRequiredMixin, ListView): 
+    model = Breed 
+    template_name = 'dogs/breed_dog_search_results.html'
+    extra_context = {
+        'title':'Результаты поискового запроса'
+    }
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        dog_object_list = Dog.objects.filter(
+            Q(name__icontains=query, is_active=True)
+        )
+        breed_object_list = Breed.objects.filter(
+            Q(name__icontains=query)
+        )
+        object_list = list(dog_object_list) + list(breed_object_list)
+        return object_list
+
+
+
+
 class DogCreateView(LoginRequiredMixin, CreateView):
     # Модель базы данных
     model = Dog
