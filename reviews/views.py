@@ -1,5 +1,5 @@
 from django.http import HttpResponseForbidden
-from django.shortcuts import render, reverse, get_object_or_404, redirect
+from django.shortcuts import reverse, get_object_or_404, redirect
 from django.views.generic import (
     ListView,
     CreateView,
@@ -7,11 +7,14 @@ from django.views.generic import (
     DetailView,
     DeleteView,
 )
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin, 
+    PermissionRequiredMixin
+)
 from django.core.exceptions import PermissionDenied
 
 from reviews.models import Review
-from users.models import User, UserRoles
+from users.models import UserRoles
 from reviews.forms import ReviewAdminForm
 from reviews.utils import slug_generator 
 
@@ -69,10 +72,11 @@ class ReviewUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         object_ = super().get_object(queryset=queryset)
-        if object_.author != self.request.user and self.request.user.role not in [
-            UserRoles.ADMIN,
-            UserRoles.MODERATOR,
-        ]:
+        if (object_.author != self.request.user 
+                and self.request.user.role not in [
+                    UserRoles.ADMIN,
+                    UserRoles.MODERATOR,
+        ]):
             raise PermissionDenied()
         return object_
 
