@@ -3,3 +3,4 @@ psycopg2
 pillow
 redis
 flake8
+python-decouple
